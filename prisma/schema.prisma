@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id              Int       @id @default(autoincrement())
+  studentId       String    @unique @map("student_id") @db.VarChar(20)
+  fullName        String    @map("full_name") @db.VarChar(120)
+  phone           String    @db.VarChar(20)
+  email           String?   @db.VarChar(120)
+  bloodGroup      String?   @map("blood_group") @db.VarChar(8)
+  fbUrl           String?   @map("fb_url")
+  district        String?   @db.VarChar(60)
+  college         String?   @db.VarChar(150)
+  profilePicture  String?   @map("profile_picture")
+  isActive        Boolean   @default(true) @map("is_active")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@index([studentId])
+  @@index([fullName])
+  @@map("students")
+}
