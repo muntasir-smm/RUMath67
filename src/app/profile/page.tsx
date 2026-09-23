@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -10,6 +10,8 @@ import {
   User,
   Camera,
   CheckCircle2,
+  Upload,
+  X,
 } from "lucide-react";
 
 interface StudentProfile {
@@ -28,12 +30,16 @@ const BLOOD_OPTIONS = ["", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
 export default function ProfilePage() {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [form, setForm] = useState<Partial<StudentProfile>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [preview, setPreview] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/profile")
@@ -44,6 +50,7 @@ export default function ProfilePage() {
       .then((data) => {
         setProfile(data.student);
         setForm(data.student);
+        setPreview(data.student.profilePicture);
       })
       .catch(() => {
         router.push("/login");
@@ -52,9 +59,66 @@ export default function ProfilePage() {
   }, [router]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setSuccess(false);
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (
+      !["image/jpeg", "image/png", "image/webp", "image/jpg"].includes(
+        file.type,
+      )
+    ) {
+      setError("Only JPG, PNG or WebP images are allowed");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setError("Image must be smaller than 2 MB");
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    setPreview(objectUrl);
+    setError("");
+    setUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Upload failed");
+        setPreview(form.profilePicture || null);
+        return;
+      }
+
+      setForm((prev) => ({ ...prev, profilePicture: data.url }));
+      setPreview(data.url);
+      setSuccess(false);
+    } catch {
+      setError("Network error while uploading. Please try again.");
+      setPreview(form.profilePicture || null);
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const removePicture = () => {
+    setForm((prev) => ({ ...prev, profilePicture: "" }));
+    setPreview(null);
     setSuccess(false);
   };
 
@@ -79,6 +143,7 @@ export default function ProfilePage() {
 
       setProfile(data.student);
       setForm(data.student);
+      setPreview(data.student.profilePicture);
       setSuccess(true);
     } catch {
       setError("Network error. Please try again.");
@@ -110,10 +175,10 @@ export default function ProfilePage() {
 
         <div className="glass rounded-2xl p-6 sm:p-8 shadow-2xl">
           <div className="flex flex-col items-center mb-8">
-            <div className="relative">
-              {form.profilePicture ? (
+            <div className="relative group">
+              {preview ? (
                 <img
-                  src={form.profilePicture}
+                  src={preview}
                   alt="Profile"
                   className="w-28 h-28 rounded-full object-cover border-4 border-amber-500/40 shadow-xl"
                 />
@@ -122,10 +187,70 @@ export default function ProfilePage() {
                   <User className="w-12 h-12 text-slate-400" />
                 </div>
               )}
-              <div className="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-amber-500 flex items-center justify-center shadow-lg">
-                <Camera className="w-4 h-4 text-slate-900" />
-              </div>
+
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                title="Change photo"
+              >
+                {uploading ? (
+                  <Loader2 className="w-8 h-8 text-white animate-spin" />
+                ) : (
+                  <Camera className="w-8 h-8 text-white" />
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-amber-500 hover:bg-amber-400 flex items-center justify-center shadow-lg transition-smooth"
+              >
+                {uploading ? (
+                  <Loader2 className="w-4 h-4 text-slate-900 animate-spin" />
+                ) : (
+                  <Camera className="w-4 h-4 text-slate-900" />
+                )}
+              </button>
             </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleFileSelect}
+              className="hidden"
+            />
+
+            <div className="mt-3 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 transition-smooth"
+              >
+                <Upload className="w-3.5 h-3.5" />
+                {uploading ? "Uploading..." : "Upload Photo"}
+              </button>
+
+              {preview && (
+                <button
+                  type="button"
+                  onClick={removePicture}
+                  className="inline-flex items-center gap-1 text-xs text-rose-400 hover:text-rose-300 transition-smooth"
+                >
+                  <X className="w-3.5 h-3.5" />
+                  Remove
+                </button>
+              )}
+            </div>
+
+            <p className="text-[11px] text-slate-500 mt-1.5">
+              JPG, PNG or WebP · Max 2 MB
+            </p>
+
             <h1 className="mt-4 text-xl font-bold text-slate-100">
               Edit My Profile
             </h1>
@@ -135,24 +260,6 @@ export default function ProfilePage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Profile Picture URL */}
-            <div>
-              <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">
-                Profile Picture URL
-              </label>
-              <input
-                type="url"
-                name="profilePicture"
-                value={form.profilePicture || ""}
-                onChange={handleChange}
-                placeholder="https://... (paste image URL)"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-800/80 border border-slate-600/50 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-sm"
-              />
-              <p className="text-[11px] text-slate-500 mt-1">
-                Tip: Upload to imgbb.com or Cloudinary and paste the link
-              </p>
-            </div>
-
             <div>
               <label className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">
                 Full Name
@@ -267,7 +374,7 @@ export default function ProfilePage() {
 
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || uploading}
               className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-slate-900 font-semibold transition-smooth shadow-lg shadow-amber-500/25 mt-2"
             >
               {saving ? (
