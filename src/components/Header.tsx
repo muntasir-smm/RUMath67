@@ -1,8 +1,10 @@
+// src/components/Header.tsx
+
 "use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { LogIn, LogOut, User, Users } from "lucide-react";
+import { LogIn, LogOut, User, Users, Shield } from "lucide-react";
 
 interface SessionUser {
   studentId: string;
@@ -27,7 +29,7 @@ export default function Header({
           day: "2-digit",
           month: "short",
           year: "numeric",
-        })
+        }),
       );
       setTimeStr(
         now.toLocaleTimeString("en-US", {
@@ -35,7 +37,7 @@ export default function Header({
           minute: "2-digit",
           second: "2-digit",
           hour12: true,
-        })
+        }),
       );
     };
     update();
@@ -78,6 +80,14 @@ export default function Header({
                   <span className="hidden sm:inline max-w-[140px] truncate">
                     {session.fullName}
                   </span>
+                </Link>
+                <Link
+                  href="/admin"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-700/60 hover:bg-amber-500/20 text-sm text-amber-400 transition-smooth"
+                  title="Admin Panel"
+                >
+                  <Shield className="w-4 h-4" />
+                  <span className="hidden sm:inline">Admin</span>
                 </Link>
                 <button
                   onClick={onLogout}
