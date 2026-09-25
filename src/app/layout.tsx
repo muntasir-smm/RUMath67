@@ -1,3 +1,5 @@
+// src/app/layout.tsx
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -9,7 +11,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Mathematics 67 · Rajshahi University",
-  description: "Private class directory for Math Batch 67, University of Rajshahi",
+  description:
+    "Private class directory for Math Batch 67, University of Rajshahi",
   robots: "noindex, nofollow",
 };
 

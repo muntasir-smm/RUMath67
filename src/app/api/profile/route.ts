@@ -1,3 +1,5 @@
+// src/app/api/profile/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
@@ -44,7 +46,7 @@ export async function PUT(req: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid data", details: parsed.error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -55,13 +57,16 @@ export async function PUT(req: NextRequest) {
       data: {
         ...(data.fullName && { fullName: data.fullName }),
         ...(data.phone && { phone: data.phone }),
-        email: data.email === "" ? null : data.email ?? undefined,
-        bloodGroup: data.bloodGroup === "" ? null : data.bloodGroup ?? undefined,
-        fbUrl: data.fbUrl === "" ? null : data.fbUrl ?? undefined,
-        district: data.district === "" ? null : data.district ?? undefined,
-        college: data.college === "" ? null : data.college ?? undefined,
+        email: data.email === "" ? null : (data.email ?? undefined),
+        bloodGroup:
+          data.bloodGroup === "" ? null : (data.bloodGroup ?? undefined),
+        fbUrl: data.fbUrl === "" ? null : (data.fbUrl ?? undefined),
+        district: data.district === "" ? null : (data.district ?? undefined),
+        college: data.college === "" ? null : (data.college ?? undefined),
         profilePicture:
-          data.profilePicture === "" ? null : data.profilePicture ?? undefined,
+          data.profilePicture === ""
+            ? null
+            : (data.profilePicture ?? undefined),
       },
     });
 
@@ -70,7 +75,7 @@ export async function PUT(req: NextRequest) {
     console.error("Profile update error:", error);
     return NextResponse.json(
       { error: "Failed to update profile" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

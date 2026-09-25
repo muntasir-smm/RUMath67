@@ -1,3 +1,5 @@
+// src/lib/cloudinary.ts
+
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
@@ -16,7 +18,7 @@ export default cloudinary;
  */
 export async function uploadProfileImage(
   buffer: Buffer,
-  studentId: string
+  studentId: string,
 ): Promise<{ url: string; publicId: string }> {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
@@ -40,7 +42,7 @@ export async function uploadProfileImage(
           url: result.secure_url,
           publicId: result.public_id,
         });
-      }
+      },
     );
     stream.end(buffer);
   });

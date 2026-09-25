@@ -1,10 +1,10 @@
+// src/lib/auth.ts
+
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { prisma } from "./prisma";
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "math67-super-secret-key-change-in-production"
-);
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export const COOKIE_NAME = "math67_session";
 
@@ -26,7 +26,7 @@ export async function createSession(studentId: string, fullName: string) {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 30, // 30 days
+    maxAge: 60 * 60 * 24 * 7, // 7 days
     path: "/",
   });
 

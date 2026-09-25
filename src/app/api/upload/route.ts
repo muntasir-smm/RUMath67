@@ -1,3 +1,5 @@
+// src/app/api/upload/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { uploadProfileImage } from "@/lib/cloudinary";
@@ -24,14 +26,14 @@ export async function POST(req: NextRequest) {
     if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
         { error: "Only JPG, PNG or WebP images are allowed" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (file.size > MAX_SIZE) {
       return NextResponse.json(
         { error: "Image must be smaller than 2 MB" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -40,7 +42,7 @@ export async function POST(req: NextRequest) {
 
     const { url, publicId } = await uploadProfileImage(
       buffer,
-      session.studentId
+      session.studentId,
     );
 
     return NextResponse.json({
@@ -52,7 +54,7 @@ export async function POST(req: NextRequest) {
     console.error("Upload error:", error);
     return NextResponse.json(
       { error: "Failed to upload image. Please try again." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

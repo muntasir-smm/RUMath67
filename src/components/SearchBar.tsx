@@ -1,3 +1,5 @@
+// src/components/SearchBar.tsx
+
 "use client";
 
 import { Search, X } from "lucide-react";

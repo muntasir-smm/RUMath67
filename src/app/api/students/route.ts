@@ -1,3 +1,5 @@
+// src/app/api/students/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
@@ -56,7 +58,7 @@ export async function GET(req: NextRequest) {
     console.error("Students fetch error:", error);
     return NextResponse.json(
       { error: "Failed to load students" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

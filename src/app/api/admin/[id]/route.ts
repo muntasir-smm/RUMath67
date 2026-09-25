@@ -1,3 +1,5 @@
+// src/app/api/admin/[id]/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
@@ -18,7 +20,7 @@ const updateSchema = z.object({
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const admin = await requireAdmin();
   if (!admin) {
@@ -38,7 +40,7 @@ export async function PUT(
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid data", details: parsed.error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -49,13 +51,16 @@ export async function PUT(
       data: {
         ...(data.fullName && { fullName: data.fullName }),
         ...(data.phone && { phone: data.phone }),
-        email: data.email === "" ? null : data.email ?? undefined,
-        bloodGroup: data.bloodGroup === "" ? null : data.bloodGroup ?? undefined,
-        fbUrl: data.fbUrl === "" ? null : data.fbUrl ?? undefined,
-        district: data.district === "" ? null : data.district ?? undefined,
-        college: data.college === "" ? null : data.college ?? undefined,
+        email: data.email === "" ? null : (data.email ?? undefined),
+        bloodGroup:
+          data.bloodGroup === "" ? null : (data.bloodGroup ?? undefined),
+        fbUrl: data.fbUrl === "" ? null : (data.fbUrl ?? undefined),
+        district: data.district === "" ? null : (data.district ?? undefined),
+        college: data.college === "" ? null : (data.college ?? undefined),
         profilePicture:
-          data.profilePicture === "" ? null : data.profilePicture ?? undefined,
+          data.profilePicture === ""
+            ? null
+            : (data.profilePicture ?? undefined),
         ...(typeof data.isActive === "boolean" && { isActive: data.isActive }),
         ...(typeof data.isAdmin === "boolean" && { isAdmin: data.isAdmin }),
       },
@@ -64,13 +69,16 @@ export async function PUT(
     return NextResponse.json({ success: true, student: updated });
   } catch (error) {
     console.error("Admin update error:", error);
-    return NextResponse.json({ error: "Failed to update student" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update student" },
+      { status: 500 },
+    );
   }
 }
 
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const admin = await requireAdmin();
   if (!admin) {
@@ -92,6 +100,9 @@ export async function DELETE(
     return NextResponse.json({ success: true, student: updated });
   } catch (error) {
     console.error("Admin delete error:", error);
-    return NextResponse.json({ error: "Failed to deactivate student" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to deactivate student" },
+      { status: 500 },
+    );
   }
 }

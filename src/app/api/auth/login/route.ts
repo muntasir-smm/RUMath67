@@ -1,3 +1,5 @@
+// src/app/api/auth/login/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import { login } from "@/lib/auth";
 import { z } from "zod";
@@ -15,7 +17,7 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid input. Please check Student ID and Phone." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -36,7 +38,7 @@ export async function POST(req: NextRequest) {
     console.error("Login error:", error);
     return NextResponse.json(
       { error: "Something went wrong. Please try again." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

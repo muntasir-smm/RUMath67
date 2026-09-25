@@ -1,6 +1,18 @@
+// src/components/StudentModal.tsx
+
 "use client";
 
-import { X, Phone, Mail, MapPin, GraduationCap, Facebook, Copy, Check, User } from "lucide-react";
+import {
+  X,
+  Phone,
+  Mail,
+  MapPin,
+  GraduationCap,
+  Facebook,
+  Copy,
+  Check,
+  User,
+} from "lucide-react";
 import { useState } from "react";
 import { formatPhone, getBloodGroupColor } from "@/lib/utils";
 
@@ -65,6 +77,7 @@ export default function StudentModal({
                 <User className="w-10 h-10 text-slate-400" />
               </div>
             )}
+            {/* Name */}
             <h2 className="mt-3 text-xl font-bold text-slate-100 text-center">
               {student.fullName}
             </h2>

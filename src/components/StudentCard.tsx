@@ -1,3 +1,5 @@
+// src/components/StudentCard.tsx
+
 "use client";
 
 import { Facebook, User } from "lucide-react";

@@ -1,3 +1,5 @@
+// src/app/api/admin/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
@@ -62,7 +64,7 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Invalid data", details: parsed.error.flatten() },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -75,7 +77,7 @@ export async function POST(req: NextRequest) {
     if (exists) {
       return NextResponse.json(
         { error: "Student ID already exists" },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -97,6 +99,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, student }, { status: 201 });
   } catch (error) {
     console.error("Admin create error:", error);
-    return NextResponse.json({ error: "Failed to create student" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create student" },
+      { status: 500 },
+    );
   }
 }

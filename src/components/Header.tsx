@@ -49,6 +49,7 @@ export default function Header({
     <header className="sticky top-0 z-50 glass border-b border-slate-700/50">
       <div className="max-w-6xl mx-auto px-4 py-3">
         {/* Top row: Date / Title / Time */}
+
         <div className="flex items-center justify-between text-sm text-slate-400 mb-2">
           <span className="font-mono tracking-wide">{dateStr}</span>
           <span className="font-mono tracking-wide">{timeStr}</span>

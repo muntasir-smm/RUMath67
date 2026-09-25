@@ -1,3 +1,5 @@
+/* src/app/globals.css */
+
 @import "tailwindcss";
 
 :root {
@@ -21,7 +23,11 @@ body {
   background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
   color: var(--foreground);
   min-height: 100vh;
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
 /* Custom scrollbar */
@@ -44,10 +50,18 @@ body {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.badge-o { background: linear-gradient(135deg, #059669, #10b981); }
-.badge-a { background: linear-gradient(135deg, #2563eb, #3b82f6); }
-.badge-b { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
-.badge-ab { background: linear-gradient(135deg, #e11d48, #f43f5e); }
+.badge-o {
+  background: linear-gradient(135deg, #059669, #10b981);
+}
+.badge-a {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+}
+.badge-b {
+  background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+}
+.badge-ab {
+  background: linear-gradient(135deg, #e11d48, #f43f5e);
+}
 
 .glass {
   background: rgba(30, 41, 59, 0.75);
@@ -56,16 +70,27 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .animate-fade-in {
   animation: fadeIn 0.35s ease-out forwards;
 }
 
 @keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.65; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.65;
+  }
 }
 .animate-pulse-soft {
   animation: pulse-soft 2s ease-in-out infinite;

@@ -5,9 +5,8 @@ A **professional, private class directory** for Math Batch 67, University of Raj
 ## Features
 
 - **Public view**: Name + Blood Group + Facebook link only
-- **Secure login**: Student ID + Phone Number
 - **Full details** after login (phone, email, district, college, profile picture)
-- **Edit own profile** + upload profile picture (via URL)
+- **Edit own profile** + upload profile picture
 - **Live search** + Blood Group filter
 - **Modern dark UI** with glassmorphism
 - **Responsive** (mobile-first)
@@ -28,10 +27,10 @@ A **professional, private class directory** for Math Batch 67, University of Raj
 
 ```bash
 # Go into the project folder
-cd math67-directory
+cd math67
 
 # Install dependencies
-npm install
+pnpm install
 
 # Create environment file
 cp .env.example .env
@@ -48,33 +47,19 @@ JWT_SECRET="your-super-long-random-secret-here-32chars+"
 
 ```bash
 # Push schema to Neon
-npx prisma db push
+pnpm prisma db push
 
-# Seed all 120 students from the original list
-npm run db:seed
+# Seed all students from the original list
+pnpm run db:seed
 ```
 
 ### 4. Run
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
-
----
-
-## How to Login (Test)
-
-Use any student from the list. Example:
-
-- **Student ID**: `2112021101`
-- **Phone**: `01773824282`
-
-Or the creator:
-
-- **Student ID**: `1911121112`
-- **Phone**: `01774085300`
 
 ---
 
@@ -133,3 +118,5 @@ math67-directory/
 ---
 
 Made for Mathematics Batch 67 · University of Rajshahi
+
+## Made by [Muntasir Munna](https://github.com/muntasir-smm)

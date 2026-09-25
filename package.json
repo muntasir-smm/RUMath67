@@ -1,6 +1,6 @@
 {
-  "name": "math67-directory",
-  "version": "1.0.0",
+  "name": "RU-Math-67-Info",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
